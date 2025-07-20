@@ -683,7 +683,6 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
-
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -881,20 +880,70 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
+
+    "catppuccin/nvim", name = "catppuccin", priority = 1000,
+    -- 'folke/tokyonight.nvim',
+    -- priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
+    require("catppuccin").setup({
+      flavour = "macchiato", -- latte, frappe, macchiato, mocha
+      background = { -- :h background
+        light = "latte",
+        dark = "mocha",
+      },
+      transparent_background = false, -- disables setting the background color.
+      show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
+      term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
+      dim_inactive = {
+        enabled = false, -- dims the background color of inactive window
+        shade = "dark",
+        percentage = 0.15, -- percentage of the shade to apply to the inactive window
+      },
+      no_italic = false, -- Force no italic
+      no_bold = false, -- Force no bold
+      no_underline = false, -- Force no underline
+      styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
+        comments = { "italic" }, -- Change the style of comments
+        conditionals = {},
+        loops = {},
+        functions = {},
+        keywords = {},
+        strings = {},
+        variables = {},
+        numbers = {},
+        booleans = {},
+        properties = {},
+        types = {},
+        operators = {},
+        -- miscs = {}, -- Uncomment to turn off hard-coded styles
+      },
+      color_overrides = {},
+      custom_highlights = {
+       Comment = {},
+       Keyword = { fg = "#cc1f1f" },
+       --Statement = { fg = "#ffffff" },
+       Function = { fg = "#ffffff" },
+       --Normal = { fg = "#a0db0b" },
+       Conditional = { fg = "#cc1f1f" },
+       --variable = {fg = "#ffffff" }
+       },
+      default_integrations = true,
+      integrations = {
+        cmp = true,
+        gitsigns = true,
+        nvimtree = true,
+        treesitter = true,
+        notify = false,
+        mini = {
+            enabled = true,
+            indentscope_color = "",
         },
-      }
+        -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+      },
+  })
 
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'catppuccin'
     end,
   },
 
@@ -944,7 +993,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash','fortran', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -1011,6 +1060,15 @@ require('lazy').setup({
     },
   },
 })
+
+require'lspconfig'.fortls.setup{
+    cmd = {
+        'fortls',
+        '--hover_signature',
+        '--hover_language=fortran',
+        '--use_signature_help'
+    }
+}
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
